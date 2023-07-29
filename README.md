@@ -5,9 +5,9 @@ A chained http call library
 
 ```go
 New().
-	WithUrl("https://httpbin.org/get").
-	Get().
-	WithError(func(err error) { panic(err) }).
-	ToString()
+  WithUrl("https://httpbin.org/get").
+  Get().
+  WithError(func(err error) { panic(err) }).
+  ToString()
 ```
 
