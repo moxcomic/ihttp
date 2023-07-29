@@ -2,6 +2,7 @@ package ihttp
 
 import (
 	"net/http"
+	"time"
 )
 
 type Client struct {
@@ -18,6 +19,18 @@ func (self *IHttp) WithHijackRedirect() (this *IHttp) {
 	self.client.CheckRedirect = func(req *http.Request, via []*http.Request) error {
 		return http.ErrUseLastResponse
 	}
+
+	return
+}
+
+func (self *IHttp) WithTimeout(d time.Duration) (this *IHttp) {
+	this = self
+
+	if self.err != nil {
+		return
+	}
+
+	self.client.Timeout = d
 
 	return
 }

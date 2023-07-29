@@ -3,6 +3,7 @@ package ihttp
 import (
 	"fmt"
 	"testing"
+	"time"
 )
 
 func TestError(t *testing.T) {
@@ -47,4 +48,8 @@ func TestGet301(t *testing.T) {
 
 func TestProxy(t *testing.T) {
 	fmt.Println(New().WithUrl("https://httpbin.org/get").WithLocalHttpProxy(7890).Get().WithError(func(err error) { panic(err) }).ToString())
+}
+
+func TestTimeout(t *testing.T) {
+	fmt.Println(New().WithUrl("https://httpbin.org/get").WithTimeout(time.Millisecond).Get().WithError(func(err error) { panic(err) }).ToString())
 }
