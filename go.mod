@@ -2,7 +2,10 @@ module github.com/moxcomic/ihttp
 
 go 1.20
 
-require github.com/spf13/viper v1.16.0
+require (
+	github.com/spf13/viper v1.16.0
+	github.com/ysmood/gson v0.7.3
+)
 
 require (
 	github.com/fsnotify/fsnotify v1.6.0 // indirect

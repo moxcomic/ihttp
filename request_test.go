@@ -32,6 +32,13 @@ func TestGetJson(t *testing.T) {
 	fmt.Println(v.GetString("origin"))
 }
 
+func TestGetGson(t *testing.T) {
+	v := New().WithUrl("https://httpbin.org/get").Get().WithError(func(err error) { panic(err) }).ToGson()
+	fmt.Println(v)
+	fmt.Println(v.Nil())
+	fmt.Println(v.Get("origin").Str())
+}
+
 func TestGetStruct(t *testing.T) {
 	resp := struct {
 		Origin string `json:"origin"`

@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/spf13/viper"
+	"github.com/ysmood/gson"
 )
 
 type Response struct {
@@ -71,6 +72,20 @@ func (self *IHttp) ToJson() (resp *viper.Viper) {
 	resp = viper.New()
 	resp.SetConfigType("json")
 	self.err = resp.ReadConfig(self.response.Body)
+
+	return
+}
+
+func (self *IHttp) ToGson() (resp gson.JSON) {
+	defer self.doErrorHandler()
+
+	if self.err != nil {
+		return
+	}
+
+	data := self.ToString()
+
+	resp = gson.NewFrom(data)
 
 	return
 }
