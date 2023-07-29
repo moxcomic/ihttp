@@ -1,7 +1,7 @@
 package ihttp
 
 import (
-	"io"
+	"bytes"
 	"net/http"
 
 	"github.com/spf13/viper"
@@ -43,7 +43,7 @@ func (self *IHttp) ToBytes() (resp []byte) {
 		return
 	}
 
-	resp, self.err = io.ReadAll(self.response.Body)
+	resp = self.responseData
 
 	return
 }
@@ -55,11 +55,9 @@ func (self *IHttp) ToString() (resp string) {
 		return
 	}
 
-	var data []byte
+	resp = string(self.responseData)
 
-	data, self.err = io.ReadAll(self.response.Body)
-
-	return string(data)
+	return
 }
 
 func (self *IHttp) ToJson() (resp *viper.Viper) {
@@ -71,7 +69,7 @@ func (self *IHttp) ToJson() (resp *viper.Viper) {
 
 	resp = viper.New()
 	resp.SetConfigType("json")
-	self.err = resp.ReadConfig(self.response.Body)
+	self.err = resp.ReadConfig(bytes.NewReader(self.responseData))
 
 	return
 }
@@ -83,9 +81,7 @@ func (self *IHttp) ToGson() (resp gson.JSON) {
 		return
 	}
 
-	data := self.ToString()
-
-	resp = gson.NewFrom(data)
+	resp = gson.NewFrom(self.ToString())
 
 	return
 }

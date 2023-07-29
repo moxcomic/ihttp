@@ -10,9 +10,10 @@ import (
 type IHttp struct {
 	err error
 
-	client   *Client
-	request  *Request
-	response *Response
+	client       *Client
+	request      *Request
+	response     *Response
+	responseData []byte
 
 	onceError    sync.Once
 	errorHandler func(error)

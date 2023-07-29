@@ -1,6 +1,7 @@
 package ihttp
 
 import (
+	"io"
 	"net/http"
 	"time"
 )
@@ -36,11 +37,26 @@ func (self *IHttp) WithTimeout(d time.Duration) (this *IHttp) {
 }
 
 func (self *IHttp) do() {
+	if self.err != nil {
+		return
+	}
+
 	if len(self.request.queryParams) > 0 {
 		self.request.URL.RawQuery = self.request.queryParams.Encode()
 	}
 
 	self.response.Response, self.err = self.client.Do(self.request.Request)
+
+	self.readBody()
+}
+
+func (self *IHttp) readBody() {
+	if self.err != nil {
+		return
+	}
+
+	defer self.response.Body.Close()
+	self.responseData, self.err = io.ReadAll(self.response.Body)
 }
 
 func (self *IHttp) Get() (this *IHttp) {

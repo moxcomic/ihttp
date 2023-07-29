@@ -9,8 +9,6 @@ func (self *IHttp) WithError(f func(err error)) (this *IHttp) {
 }
 
 func (self *IHttp) doErrorHandler() {
-	self.response.Body.Close()
-
 	if f := self.errorHandler; f != nil && self.err != nil {
 		self.onceError.Do(func() {
 			f(self.err)
