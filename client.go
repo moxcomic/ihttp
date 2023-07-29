@@ -36,6 +36,10 @@ func (self *IHttp) WithTimeout(d time.Duration) (this *IHttp) {
 }
 
 func (self *IHttp) do() {
+	if len(self.request.queryParams) > 0 {
+		self.request.URL.RawQuery = self.request.queryParams.Encode()
+	}
+
 	self.response.Response, self.err = self.client.Do(self.request.Request)
 }
 

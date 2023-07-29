@@ -2,7 +2,9 @@ package ihttp
 
 import (
 	"net/http"
+	"net/url"
 	"sync"
+	"time"
 )
 
 type IHttp struct {
@@ -18,8 +20,13 @@ type IHttp struct {
 
 func New() *IHttp {
 	return &IHttp{
-		client:   &Client{Client: &http.Client{}},
-		request:  &Request{Request: &http.Request{}},
+		client: &Client{Client: &http.Client{
+			Timeout: time.Second * 60,
+		}},
+		request: &Request{
+			Request:     &http.Request{},
+			queryParams: url.Values{},
+		},
 		response: &Response{Response: &http.Response{}},
 	}
 }

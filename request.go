@@ -7,6 +7,7 @@ import (
 
 type Request struct {
 	*http.Request
+	queryParams url.Values
 }
 
 func (self *IHttp) WithUrl(u string) (this *IHttp) {
@@ -23,6 +24,46 @@ func (self *IHttp) WithUrl(u string) (this *IHttp) {
 	}
 
 	self.request.URL = value
+
+	return
+}
+
+func (self *IHttp) WithQuery(q url.Values) (this *IHttp) {
+	this = self
+
+	if self.err != nil {
+		return
+	}
+
+	for k, v := range q {
+		self.request.queryParams.Add(k, v[0])
+	}
+
+	return
+}
+
+func (self *IHttp) WithAddQuery(k, v string) (this *IHttp) {
+	this = self
+
+	if self.err != nil {
+		return
+	}
+
+	self.request.queryParams.Add(k, v)
+
+	return
+}
+
+func (self *IHttp) WithAddQuerys(q map[string]string) (this *IHttp) {
+	this = self
+
+	if self.err != nil {
+		return
+	}
+
+	for k, v := range q {
+		self.request.queryParams.Add(k, v)
+	}
 
 	return
 }

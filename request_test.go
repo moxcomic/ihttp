@@ -2,6 +2,7 @@ package ihttp
 
 import (
 	"fmt"
+	"net/url"
 	"testing"
 	"time"
 )
@@ -59,4 +60,12 @@ func TestProxy(t *testing.T) {
 
 func TestTimeout(t *testing.T) {
 	fmt.Println(New().WithUrl("https://httpbin.org/get").WithTimeout(time.Millisecond).Get().WithError(func(err error) { panic(err) }).ToString())
+}
+
+func TestQuery(t *testing.T) {
+	fmt.Println(New().WithUrl("https://httpbin.org/get").WithQuery(url.Values{"a": {"b"}}).Get().WithError(func(err error) { panic(err) }).ToJson().GetString("url"))
+	<-time.After(time.Second * 2)
+	fmt.Println(New().WithUrl("https://httpbin.org/get").WithAddQuery("a", "b").Get().WithError(func(err error) { panic(err) }).ToJson().GetString("url"))
+	<-time.After(time.Second * 2)
+	fmt.Println(New().WithUrl("https://httpbin.org/get").WithAddQuerys(map[string]string{"a": "b", "c": "d"}).Get().WithError(func(err error) { panic(err) }).ToJson().GetString("url"))
 }
