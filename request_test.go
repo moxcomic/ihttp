@@ -42,7 +42,7 @@ func TestGetStruct(t *testing.T) {
 }
 
 func TestGet301(t *testing.T) {
-	fmt.Println(New().WithUrl("https://b23.tv/26kpzlf").WithHijackRedict().WithError(func(err error) { panic(err) }).Head().ToLocation())
+	fmt.Println(New().WithUrl("https://b23.tv/26kpzlf").WithHijackRedirect().WithError(func(err error) { panic(err) }).Head().ToLocation())
 }
 
 func TestProxy(t *testing.T) {

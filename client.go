@@ -8,7 +8,7 @@ type Client struct {
 	*http.Client
 }
 
-func (self *IHttp) WithHijackRedict() (this *IHttp) {
+func (self *IHttp) WithHijackRedirect() (this *IHttp) {
 	this = self
 
 	if self.err != nil {
