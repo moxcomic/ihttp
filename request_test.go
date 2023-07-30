@@ -139,3 +139,14 @@ func TestQuery(t *testing.T) {
 			GetString("url"),
 	)
 }
+
+func TestHeader(t *testing.T) {
+	fmt.Println(
+		New().
+			WithUrl("https://httpbin.org/get").
+			WithHeader("My-Header", "Header Value").
+			Get().
+			WithError(func(err error) { panic(err) }).
+			ToString(),
+	)
+}

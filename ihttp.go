@@ -25,7 +25,9 @@ func New() *IHttp {
 			Timeout: time.Second * 60,
 		}},
 		request: &Request{
-			Request:     &http.Request{},
+			Request: &http.Request{
+				Header: make(http.Header),
+			},
 			queryParams: url.Values{},
 		},
 		response: &Response{Response: &http.Response{}},
