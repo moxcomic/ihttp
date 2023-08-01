@@ -132,7 +132,7 @@ func TestQuery(t *testing.T) {
 	fmt.Println(
 		New().
 			WithUrl("https://httpbin.org/get").
-			WithAddQuerys(map[string]string{"a": "b", "c": "d"}).
+			WithAddQuerys(map[string]any{"a": "b", "c": "d"}).
 			Get().
 			WithError(func(err error) { panic(err) }).
 			ToJson().

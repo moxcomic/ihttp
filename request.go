@@ -1,6 +1,7 @@
 package ihttp
 
 import (
+	"fmt"
 	"net/http"
 	"net/url"
 )
@@ -54,7 +55,7 @@ func (self *IHttp) WithAddQuery(k, v string) (this *IHttp) {
 	return
 }
 
-func (self *IHttp) WithAddQuerys(q map[string]string) (this *IHttp) {
+func (self *IHttp) WithAddQuerys(q map[string]any) (this *IHttp) {
 	this = self
 
 	if self.err != nil {
@@ -62,7 +63,7 @@ func (self *IHttp) WithAddQuerys(q map[string]string) (this *IHttp) {
 	}
 
 	for k, v := range q {
-		self.request.queryParams.Add(k, v)
+		self.request.queryParams.Add(k, fmt.Sprintf("%v", v))
 	}
 
 	return
