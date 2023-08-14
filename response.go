@@ -12,82 +12,68 @@ type Response struct {
 	*http.Response
 }
 
-func (self *IHttp) ToHeader() (resp http.Header) {
-	defer self.doErrorHandler()
-
+func (self *IHttp) ToHeader() (http.Header, error) {
 	if self.err != nil {
-		return
+		return nil, self.err
 	}
 
-	resp = self.response.Header
-
-	return
+	return self.response.Header, nil
 }
 
-func (self *IHttp) ToLocation() (resp string) {
-	defer self.doErrorHandler()
-
+func (self *IHttp) ToLocation() (string, error) {
 	if self.err != nil {
-		return
+		return "", self.err
 	}
 
-	resp = self.response.Header.Get("Location")
-
-	return
+	return self.response.Header.Get("Location"), nil
 }
 
-func (self *IHttp) ToBytes() (resp []byte) {
-	defer self.doErrorHandler()
-
+func (self *IHttp) ToBytes() ([]byte, error) {
 	if self.err != nil {
-		return
+		return nil, self.err
 	}
 
-	resp = self.responseData
-
-	return
+	return self.responseData, nil
 }
 
-func (self *IHttp) ToString() (resp string) {
-	defer self.doErrorHandler()
-
+func (self *IHttp) ToString() (string, error) {
 	if self.err != nil {
-		return
+		return "", self.err
 	}
 
-	resp = string(self.responseData)
-
-	return
+	return string(self.responseData), self.err
 }
 
-func (self *IHttp) ToJson() (resp *viper.Viper) {
-	defer self.doErrorHandler()
-
+func (self *IHttp) ToJson() (*viper.Viper, error) {
 	if self.err != nil {
-		return
+		return nil, self.err
 	}
 
-	resp = viper.New()
-	resp.SetConfigType("json")
-	self.err = resp.ReadConfig(bytes.NewReader(self.responseData))
+	v := viper.New()
+	v.SetConfigType("json")
+	self.err = v.ReadConfig(bytes.NewReader(self.responseData))
 
-	return
+	return v, self.err
 }
 
-func (self *IHttp) ToGson() (resp gson.JSON) {
-	defer self.doErrorHandler()
-
+func (self *IHttp) ToGson() (gson.JSON, error) {
 	if self.err != nil {
-		return
+		return gson.New(""), self.err
 	}
 
-	resp = gson.NewFrom(self.ToString())
+	str, err := self.ToString()
+	if err != nil {
+		return gson.New(""), err
+	}
 
-	return
+	return gson.NewFrom(str), nil
 }
 
-func (self *IHttp) ToJsonStruct(value any) {
-	defer self.doErrorHandler()
+func (self *IHttp) ToJsonStruct(value any) error {
+	j, err := self.ToJson()
+	if err != nil {
+		return err
+	}
 
-	self.err = self.ToJson().Unmarshal(value)
+	return j.Unmarshal(value)
 }

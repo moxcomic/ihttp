@@ -8,18 +8,12 @@ import (
 )
 
 func TestError(t *testing.T) {
-	var (
-		e error
-		s string
-	)
-
-	s = New().
+	s, err := New().
 		Get().
-		WithError(func(err error) { e = err }).
 		ToString()
 
-	if e != nil {
-		panic(e)
+	if err != nil {
+		panic(err)
 	}
 
 	fmt.Println(s)
@@ -30,31 +24,30 @@ func TestGetString(t *testing.T) {
 		New().
 			WithUrl("https://httpbin.org/get").
 			Get().
-			WithError(func(err error) { panic(err) }).
 			ToString(),
 	)
 }
 
 func TestGetJson(t *testing.T) {
-	v := New().
+	v, err := New().
 		WithUrl("https://httpbin.org/get").
 		Get().
-		WithError(func(err error) { panic(err) }).
 		ToJson()
 
 	fmt.Println(v)
+	fmt.Println(err)
 	fmt.Println(v == nil)
 	fmt.Println(v.GetString("origin"))
 }
 
 func TestGetGson(t *testing.T) {
-	v := New().
+	v, err := New().
 		WithUrl("https://httpbin.org/get").
 		Get().
-		WithError(func(err error) { panic(err) }).
 		ToGson()
 
 	fmt.Println(v)
+	fmt.Println(err)
 	fmt.Println(v.Nil())
 	fmt.Println(v.Get("origin").Str())
 }
@@ -64,11 +57,14 @@ func TestGetStruct(t *testing.T) {
 		Origin string `json:"origin"`
 	}{}
 
-	New().
+	err := New().
 		WithUrl("https://httpbin.org/get").
 		Get().
-		WithError(func(err error) { panic(err) }).
 		ToJsonStruct(&resp)
+
+	if err != nil {
+		panic(err)
+	}
 
 	fmt.Println(resp.Origin)
 }
@@ -78,7 +74,6 @@ func TestGet301(t *testing.T) {
 		New().
 			WithUrl("https://b23.tv/26kpzlf").
 			WithHijackRedirect().
-			WithError(func(err error) { panic(err) }).
 			Head().
 			ToLocation(),
 	)
@@ -90,7 +85,6 @@ func TestProxy(t *testing.T) {
 			WithUrl("https://httpbin.org/get").
 			WithLocalHttpProxy(7890).
 			Get().
-			WithError(func(err error) { panic(err) }).
 			ToString(),
 	)
 }
@@ -101,43 +95,50 @@ func TestTimeout(t *testing.T) {
 			WithUrl("https://httpbin.org/get").
 			WithTimeout(time.Millisecond).
 			Get().
-			WithError(func(err error) { panic(err) }).
 			ToString(),
 	)
 }
 
 func TestQuery(t *testing.T) {
-	fmt.Println(
-		New().
-			WithUrl("https://httpbin.org/get").
-			WithQuery(url.Values{"a": {"b"}}).
-			Get().
-			WithError(func(err error) { panic(err) }).
-			ToJson().
-			GetString("url"),
-	)
-	<-time.After(time.Second * 2)
+	j1, err := New().
+		WithUrl("https://httpbin.org/get").
+		WithQuery(url.Values{"a": {"b"}}).
+		Get().
+		ToJson()
 
-	fmt.Println(
-		New().
-			WithUrl("https://httpbin.org/get").
-			WithAddQuery("a", "b").
-			Get().
-			WithError(func(err error) { panic(err) }).
-			ToJson().
-			GetString("url"),
-	)
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(j1.GetString("url"))
 
 	<-time.After(time.Second * 2)
-	fmt.Println(
-		New().
-			WithUrl("https://httpbin.org/get").
-			WithAddQuerys(map[string]any{"a": "b", "c": "d"}).
-			Get().
-			WithError(func(err error) { panic(err) }).
-			ToJson().
-			GetString("url"),
-	)
+
+	j2, err := New().
+		WithUrl("https://httpbin.org/get").
+		WithAddQuery("a", "b").
+		Get().
+		ToJson()
+
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(j2.GetString("url"))
+
+	<-time.After(time.Second * 2)
+
+	j3, err := New().
+		WithUrl("https://httpbin.org/get").
+		WithAddQuerys(map[string]any{"a": "b", "c": "d"}).
+		Get().
+		ToJson()
+
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(j3.GetString("url"))
 }
 
 func TestHeader(t *testing.T) {
@@ -146,7 +147,6 @@ func TestHeader(t *testing.T) {
 			WithUrl("https://httpbin.org/get").
 			WithHeader("My-Header", "Header Value").
 			Get().
-			WithError(func(err error) { panic(err) }).
 			ToString(),
 	)
 }
