@@ -5,6 +5,7 @@ go 1.20
 require (
 	github.com/spf13/viper v1.16.0
 	github.com/ysmood/gson v0.7.3
+	golang.org/x/net v0.10.0
 )
 
 require (
