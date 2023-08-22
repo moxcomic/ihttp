@@ -1,7 +1,9 @@
 package ihttp
 
 import (
+	"bytes"
 	"fmt"
+	"io"
 	"net/http"
 	"net/url"
 )
@@ -25,6 +27,18 @@ func (self *IHttp) WithUrl(u string) (this *IHttp) {
 	}
 
 	self.request.URL = value
+
+	return
+}
+
+func (self *IHttp) WithBody(body []byte) (this *IHttp) {
+	this = self
+
+	if self.err != nil {
+		return
+	}
+
+	self.request.Body = io.NopCloser(bytes.NewReader(body))
 
 	return
 }

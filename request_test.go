@@ -150,3 +150,14 @@ func TestHeader(t *testing.T) {
 			ToString(),
 	)
 }
+
+func TestBody(t *testing.T) {
+	fmt.Println(
+		New().
+			WithUrl("https://httpbin.org/post").
+			WithHeader("Content-Type", "application/json").
+			WithBody([]byte(`{"a":"b"}`)).
+			Post().
+			ToString(),
+	)
+}
