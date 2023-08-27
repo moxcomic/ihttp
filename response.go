@@ -3,6 +3,7 @@ package ihttp
 import (
 	"bytes"
 	"net/http"
+	"strings"
 
 	"github.com/spf13/viper"
 	"github.com/ysmood/gson"
@@ -76,4 +77,12 @@ func (self *IHttp) ToJsonStruct(value any) error {
 	}
 
 	return j.Unmarshal(value)
+}
+
+func (self *IHttp) ToReader() (*strings.Reader, error) {
+	if self.err != nil {
+		return nil, self.err
+	}
+
+	return strings.NewReader(string(self.responseData)), self.err
 }
