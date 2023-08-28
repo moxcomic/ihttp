@@ -2,6 +2,7 @@ package ihttp
 
 import (
 	"bytes"
+	"io"
 	"net/http"
 
 	"github.com/spf13/viper"
@@ -76,4 +77,26 @@ func (self *IHttp) ToJsonStruct(value any) error {
 	}
 
 	return j.Unmarshal(value)
+}
+
+func (self *IHttp) ToReader() (*bytes.Reader, error) {
+	if self.err != nil {
+		return nil, self.err
+	}
+
+	return bytes.NewReader(self.responseData), self.err
+}
+
+func (self *IHttp) ToNopCloser() (io.ReadCloser, error) {
+	if self.err != nil {
+		return nil, self.err
+	}
+
+	var reader *bytes.Reader
+	reader, self.err = self.ToReader()
+	if self.err != nil {
+		return nil, self.err
+	}
+
+	return io.NopCloser(reader), self.err
 }
